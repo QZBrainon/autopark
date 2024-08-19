@@ -1,0 +1,22 @@
+# checkin_str = '15/08/2024 23:48:35'
+# checkout_str = '16/08/2024 02:20:49'
+
+# # Define the format for parsing
+# date_format = '%d/%m/%Y %H:%M:%S'
+
+# # Parse the strings into datetime objects
+# checkin_time = datetime.strptime(checkin_str, date_format)
+# checkout_time = datetime.strptime(checkout_str, date_format)
+
+# # Compute the difference
+# time_difference = checkout_time - checkin_time
+
+# # Output the result
+# print("Check-in Time:", checkin_time)
+# print("Check-out Time:", checkout_time)
+# print("Time Difference:", time_difference)
+# print("Days:", time_difference.days)
+# print("Hours:", round(time_difference.seconds /60 /60))
+# print("Minutes:", round(time_difference.seconds / 60))
+# print("Seconds:", time_difference.seconds)
+# print("Total Seconds:", time_difference.total_seconds())
