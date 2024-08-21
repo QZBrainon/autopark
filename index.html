@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Capture and Upload Video Feed</title>
+    <style>
+      #video {
+        width: 100%;
+        max-width: 600px;
+        border: 1px solid black;
+      }
+      #canvas {
+        display: block; /* Make the canvas visible for debugging */
+        border: 1px solid red; /* Add a border to easily see the canvas */
+      }
+      button:disabled {
+        cursor: not-allowed;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Video Feed</h1>
+    <img id="video" src="http://192.168.100.24:4747/video" alt="Video Feed" />
+    <button id="capture">Capture</button>
+    <button id="upload" disabled>Upload</button>
+    <canvas id="canvas"></canvas>
+
+    <script>
+      function captureImage() {
+        const img = document.getElementById("video");
+        const canvas = document.getElementById("canvas");
+        const context = canvas.getContext("2d");
+
+        canvas.width = img.naturalWidth || img.width;
+        canvas.height = img.naturalHeight || img.height;
+
+        console.log("Canvas size:", canvas.width, canvas.height);
+
+        context.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        // Create a new image element to display the captured image
+        const capturedImage = new Image();
+        capturedImage.src = canvas.toDataURL("image/jpeg");
+        capturedImage.style.border = "1px solid green"; // Add a border to distinguish the image
+        document.body.appendChild(capturedImage); // Append to the body for debugging
+
+        // Log the beginning of the data URL to check if it's valid
+        const dataURL = canvas.toDataURL("image/jpeg");
+        console.log(dataURL);
+
+        return dataURL;
+      }
+
+      async function uploadImage(dataURL) {
+        const blob = await (await fetch(dataURL)).blob();
+        const formData = new FormData();
+        formData.append("file", blob, "photo.jpg");
+
+        console.log("FormData entries:", [...formData.entries()]); // Log FormData entries for debugging
+
+        try {
+          const response = await fetch("http://localhost:3000/plates", {
+            method: "POST",
+            body: formData,
+          });
+
+          const result = await response.json();
+          console.log("Upload result:", result);
+        } catch (err) {
+          console.error("Error uploading image:", err);
+        }
+      }
+
+      document.getElementById("capture").addEventListener("click", () => {
+        try {
+          const dataURL = captureImage(); // Capture the image
+          if (dataURL) {
+            document.getElementById("upload").disabled = false; // Enable the upload button
+          }
+          console.log("Image captured successfully.");
+        } catch (error) {
+          console.error("Error capturing image:", error);
+        }
+      });
+
+      document.getElementById("upload").addEventListener("click", () => {
+        try {
+          const dataURL = captureImage(); // Capture the image
+          uploadImage(dataURL); // Upload the image
+          console.log("Image uploaded successfully.");
+        } catch (error) {
+          console.error("Error uploading image:", error);
+        }
+      });
+    </script>
+  </body>
+</html>

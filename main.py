@@ -89,7 +89,7 @@ def main():
             if area > min_area:
                 # Draw rectangle around the plate
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                cv2.putText(frame, "Number Plate", (x, y - 5), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255, 0, 255), 2)
+                cv2.putText(frame, "Plate", (x, y - 5), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255, 0, 255), 2)
 
                 # Extract the region of interest (ROI)
                 img_roi = frame[y: y + h, x: x + w]
@@ -113,20 +113,22 @@ def main():
         # Display the result
         cv2.imshow("Result", frame)
 
-        # Save the image if 's' key is pressed
-        if cv2.waitKey(1) & 0xFF == ord('s'):
-            # Check if ROI exists
-            if 'img_roi' in locals() and img_roi is not None:
-                cv2.imwrite("plates/scanned_img_" + str(int(time.time())) + ".jpg", img_roi)
-                cv2.rectangle(frame, (0, 200), (640, 300), (0, 255, 0), cv2.FILLED)
-                cv2.putText(frame, "Plate Saved", (150, 265), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (0, 0, 255), 2)
-                cv2.imshow("Results", frame)
-                cv2.waitKey(500)
-                img_roi = None
-
         # Exit if 'q' key is pressed
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
+
+        # # Save the image if 's' key is pressed
+        # if cv2.waitKey(1) & 0xFF == ord('s'):
+        #     # Check if ROI exists
+        #     if 'img_roi' in locals() and img_roi is not None:
+        #         cv2.imwrite("plates/scanned_img_" + str(int(time.time())) + ".jpg", img_roi)
+        #         cv2.rectangle(frame, (0, 200), (640, 300), (0, 255, 0), cv2.FILLED)
+        #         cv2.putText(frame, "Plate Saved", (150, 265), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (0, 0, 255), 2)
+        #         cv2.imshow("Results", frame)
+        #         cv2.waitKey(500)
+        #         img_roi = None
+
+        
 
     cap.release()
     cv2.destroyAllWindows()
